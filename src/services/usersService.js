@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import pkg from 'pg';
 
 // exceptions
+import AuthenticationError from '../exceptions/AuthenticationError.js';
 import InvariantError from '../exceptions/InvariantError.js';
 import NotFoundError from '../exceptions/NotFoundError.js';
 
@@ -59,10 +60,33 @@ class UsersService {
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new NotFoundError('Cannot find user');
+      throw new NotFoundError('cannot find user');
     }
 
     return rows[0];
+  }
+
+  async verifyUserCredential(username, password) {
+    const query = {
+      text: 'SELECT id, password FROM users WHERE username = $1',
+      values: [username],
+    };
+
+    const { rows, rowCount } = await this._pool.query(query);
+
+    if (!rowCount) {
+      throw new InvariantError('username not register');
+    }
+
+    const { id, password: hashedPassword } = rows[0];
+
+    const match = await bcrypt.compare(password, hashedPassword);
+
+    if (!match) {
+      throw new AuthenticationError('password incorrect');
+    }
+
+    return id;
   }
 }
 

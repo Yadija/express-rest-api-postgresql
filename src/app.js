@@ -3,6 +3,7 @@ import express from 'express';
 import 'dotenv/config';
 
 // router
+import authenticationRouter from './routes/authentications.js';
 import userRouter from './routes/users.js';
 
 // middleware
@@ -14,6 +15,7 @@ const app = express();
 app.use(express.json());
 
 app.use(userRouter);
+app.use(authenticationRouter);
 
 app.use(errorMiddleware);
 
