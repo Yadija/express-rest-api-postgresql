@@ -75,7 +75,7 @@ class UsersService {
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new InvariantError('username not register');
+      throw new InvariantError('username or password incorrect');
     }
 
     const { id, password: hashedPassword } = rows[0];
@@ -83,7 +83,7 @@ class UsersService {
     const match = await bcrypt.compare(password, hashedPassword);
 
     if (!match) {
-      throw new AuthenticationError('password incorrect');
+      throw new AuthenticationError('username or password incorrect');
     }
 
     return id;
