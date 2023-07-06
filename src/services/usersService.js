@@ -17,10 +17,6 @@ class UsersService {
   async addUser({ username, password, fullname }) {
     await this.verifyNewUsername(username);
 
-    if (/\s/.test(username)) {
-      throw new InvariantError('username contain forbiden character');
-    }
-
     const id = `user-${nanoid(15)}`;
     const hashedPassword = await bcrypt.hash(password, 10);
 
