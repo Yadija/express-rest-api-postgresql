@@ -62,7 +62,7 @@ class AuthenticationsController {
 
       res.status(200).json({
         status: 'success',
-        message: 'Refresh token berhasil dihapus',
+        message: 'refresh token deleted successfully',
       });
     } catch (error) {
       next(error);
